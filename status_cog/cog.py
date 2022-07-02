@@ -84,17 +84,29 @@ class StatusCog(commands.Cog):
         )
 
         if self.maintenance_mode:
-            webhook.edit_message(
-                message_id=int(os.environ.get("status_cog_message_id")),
-                embed=self.embeds[self.style]["maintenance"],
-                username=self.bot.user.name
-            )
+            try:
+                webhook.edit_message(
+                    message_id=int(os.environ.get("status_cog_message_id")),
+                    embed=self.embeds[self.style]["maintenance"],
+                    username=self.bot.user.name
+                )
+            except TypeError:
+                webhook.send(
+                    embed=self.embeds[self.style]["maintenance"],
+                    username=self.bot.user.name
+                )
         else:
-            webhook.edit_message(
-                message_id=int(os.environ.get("status_cog_message_id")),
-                embed=self.embeds[self.style]["offline"],
-                username=self.bot.user.name
-            )
+            try:
+                webhook.edit_message(
+                    message_id=int(os.environ.get("status_cog_message_id")),
+                    embed=self.embeds[self.style]["offline"],
+                    username=self.bot.user.name
+                )
+            except TypeError:
+                webhook.send(
+                    embed=self.embeds[self.style]["offline"],
+                    username=self.bot.user.name
+                )
 
     @commands.Cog.listener()
     async def on_ready(self):  # pylint: disable=missing-function-docstring
@@ -113,8 +125,11 @@ class StatusCog(commands.Cog):
                     embed=self.embeds[self.style]["online"],
                     username=self.bot.user.name
                 )
-            except Exception as e:
-                print(e)
+            except TypeError:
+                await webhook.send(
+                    embed=self.embeds["online"],
+                    username=self.bot.user.name
+                )
 
     @commands.command()
     @commands.is_owner()

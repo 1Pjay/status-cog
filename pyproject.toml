@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "status-cog"
-version = "0.1.0-alpha.1"
+version = "0.1.0-alpha.2"
 description = "Shows the bot status in your discord server."
 license = "MIT"
 authors = ["Pjay <Pjay1@tutanota.com>"]

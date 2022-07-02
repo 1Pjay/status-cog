@@ -32,6 +32,7 @@ class StatusCog(commands.Cog):
     def __init__(self, bot: commands.Bot):  # pylint: disable=missing-function-docstring
         self.bot = bot
         self.maintenance_mode = False
+        self.style = str(os.environ["status_cog_style"])
         self.embeds = {
             "1": {
                 "online": discord.Embed(
@@ -85,13 +86,13 @@ class StatusCog(commands.Cog):
         if self.maintenance_mode:
             webhook.edit_message(
                 message_id=int(os.environ.get("status_cog_message_id")),
-                embed=self.embeds["maintenance"],
+                embed=self.embeds[self.style]["maintenance"],
                 username=self.bot.user.name
             )
         else:
             webhook.edit_message(
                 message_id=int(os.environ.get("status_cog_message_id")),
-                embed=self.embeds["offline"],
+                embed=self.embeds[self.style]["offline"],
                 username=self.bot.user.name
             )
 
@@ -109,7 +110,7 @@ class StatusCog(commands.Cog):
             try:
                 await webhook.edit_message(
                     message_id=int(os.environ.get("status_cog_message_id1")),
-                    embed=self.embeds["online"],
+                    embed=self.embeds[self.style]["online"],
                     username=self.bot.user.name
                 )
             except Exception as e:

@@ -121,7 +121,7 @@ class StatusCog(commands.Cog):
             )
             try:
                 await webhook.edit_message(
-                    message_id=int(os.environ.get("status_cog_message_id1")),
+                    message_id=int(os.environ.get("status_cog_message_id")),
                     embed=self.embeds[self.style]["online"],
                     username=self.bot.user.name
                 )

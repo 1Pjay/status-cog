@@ -33,21 +33,40 @@ class StatusCog(commands.Cog):
         self.bot = bot
         self.maintenance_mode = False
         self.embeds = {
-            "online": discord.Embed(
-                title="Bot Status 🟢",
-                description="Bot is now online!",
-                color=discord.Colour.green()
-            ),
-            "maintenance": discord.Embed(
-                title="Bot Status 🟡",
-                description="The bot is going offline for maintenance!",
-                colour=discord.Colour.gold()
-            ),
-            "offline": discord.Embed(
-                title="Bot Status 🔴",
-                description="The bot is offline, please wait until it is back online again.",
-                colour=discord.Colour.red()
-            )
+            "1": {
+                "online": discord.Embed(
+                    title="Bot Status 🟢",
+                    description="Bot is now online!",
+                    color=discord.Colour.green()
+                ),
+                "maintenance": discord.Embed(
+                    title="Bot Status 🟡",
+                    description="The bot is going offline for maintenance!",
+                    colour=discord.Colour.gold()
+                ),
+                "offline": discord.Embed(
+                    title="Bot Status 🔴",
+                    description="The bot is offline, please wait until it is back online again.",
+                    colour=discord.Colour.red()
+                )
+            },
+            "2": {
+                "online": discord.Embed(
+                    title="Online",
+                    description="The bot is online",
+                    color=discord.Colour.blurple()
+                ),
+                "maintenance": discord.Embed(
+                    title="Offline",
+                    description="The bot is offline due to maintenance",
+                    color=discord.Colour.gold()
+                ),
+                "offline": discord.Embed(
+                    title="Offline",
+                    description="The bot is offline due to unkown causes",
+                    color=discord.Colour.red()
+                )
+            }
         }
 
         atexit.register(self.on_exit)

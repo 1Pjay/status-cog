@@ -32,22 +32,42 @@ class StatusCog(commands.Cog):
     def __init__(self, bot: commands.Bot):  # pylint: disable=missing-function-docstring
         self.bot = bot
         self.maintenance_mode = False
+        self.style = str(os.environ["status_cog_style"])
         self.embeds = {
-            "online": discord.Embed(
-                title="Bot Status 🟢",
-                description="Bot is now online!",
-                color=discord.Colour.green()
-            ),
-            "maintenance": discord.Embed(
-                title="Bot Status 🟡",
-                description="The bot is going offline for maintenance!",
-                colour=discord.Colour.gold()
-            ),
-            "offline": discord.Embed(
-                title="Bot Status 🔴",
-                description="The bot is offline, please wait until it is back online again.",
-                colour=discord.Colour.red()
-            )
+            "1": {
+                "online": discord.Embed(
+                    title="Bot Status 🟢",
+                    description="Bot is now online!",
+                    color=discord.Colour.green()
+                ),
+                "maintenance": discord.Embed(
+                    title="Bot Status 🟡",
+                    description="The bot is going offline for maintenance!",
+                    colour=discord.Colour.gold()
+                ),
+                "offline": discord.Embed(
+                    title="Bot Status 🔴",
+                    description="The bot is offline, please wait until it is back online again.",
+                    colour=discord.Colour.red()
+                )
+            },
+            "2": {
+                "online": discord.Embed(
+                    title="Online",
+                    description="The bot is online",
+                    color=discord.Colour.blurple()
+                ),
+                "maintenance": discord.Embed(
+                    title="Offline",
+                    description="The bot is offline due to maintenance",
+                    color=discord.Colour.gold()
+                ),
+                "offline": discord.Embed(
+                    title="Offline",
+                    description="The bot is offline due to unkown causes",
+                    color=discord.Colour.red()
+                )
+            }
         }
 
         atexit.register(self.on_exit)
@@ -64,17 +84,29 @@ class StatusCog(commands.Cog):
         )
 
         if self.maintenance_mode:
-            webhook.edit_message(
-                message_id=int(os.environ.get("status_cog_message_id")),
-                embed=self.embeds["maintenance"],
-                username=self.bot.user.name
-            )
+            try:
+                webhook.edit_message(
+                    message_id=int(os.environ.get("status_cog_message_id")),
+                    embed=self.embeds[self.style]["maintenance"],
+                    username=self.bot.user.name
+                )
+            except TypeError:
+                webhook.send(
+                    embed=self.embeds[self.style]["maintenance"],
+                    username=self.bot.user.name
+                )
         else:
-            webhook.edit_message(
-                message_id=int(os.environ.get("status_cog_message_id")),
-                embed=self.embeds["offline"],
-                username=self.bot.user.name
-            )
+            try:
+                webhook.edit_message(
+                    message_id=int(os.environ.get("status_cog_message_id")),
+                    embed=self.embeds[self.style]["offline"],
+                    username=self.bot.user.name
+                )
+            except TypeError:
+                webhook.send(
+                    embed=self.embeds[self.style]["offline"],
+                    username=self.bot.user.name
+                )
 
     @commands.Cog.listener()
     async def on_ready(self):  # pylint: disable=missing-function-docstring
@@ -89,12 +121,15 @@ class StatusCog(commands.Cog):
             )
             try:
                 await webhook.edit_message(
-                    message_id=int(os.environ.get("status_cog_message_id1")),
+                    message_id=int(os.environ.get("status_cog_message_id")),
+                    embed=self.embeds[self.style]["online"],
+                    username=self.bot.user.name
+                )
+            except TypeError:
+                await webhook.send(
                     embed=self.embeds["online"],
                     username=self.bot.user.name
                 )
-            except Exception as e:
-                print(e)
 
     @commands.command()
     @commands.is_owner()

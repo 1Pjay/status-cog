@@ -17,3 +17,7 @@ bot.load_extension("status_cog")
 
 bot.run()
 ```
+
+## Commands
+### [prefix]maintenance
+Enables maintenance mode, when the bot shuts off it won't send an offline message but a maintenance message showing that this shutdown was planned.
